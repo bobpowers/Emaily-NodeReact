@@ -5,10 +5,12 @@ const keys = require('../config/keys');
 
 const User = mongoose.model('users');
 
+//The content (mongo ID) that is placed into a cookie
 passport.serializeUser((user, done) => {
 	done(null, user.id);
 });
 
+//The content (mongo ID) that is removed from the cookie to identify the user
 passport.deserializeUser((id, done) => {
 	User.findById(id).then(user => {
 		done(null, user);
