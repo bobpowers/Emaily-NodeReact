@@ -5,9 +5,9 @@ import * as actions from '../actions';
 
 //dummy components
 import Header from './Header';
+import Landing from './Landing';
 const Dashboard = () => <h2>Dashboard</h2>;
 const SurveyNew = () => <h2>SurveyNew</h2>;
-const Landing = () => <h2>Landing</h2>;
 
 class App extends Component {
 	// using 'DidMount' instead of 'WillMount' because 'Did' is viewed as the preferred action for initial AJAX requests. And the difference in speed/timing between the two has virtually no difference
