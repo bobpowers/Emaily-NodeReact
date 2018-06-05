@@ -4,7 +4,8 @@ const cookieSession = require('cookie-session');
 const passport = require('passport');
 const bodyParser = require('body-parser');
 const keys = require('./config/keys');
-require('./models/User'); //needs to be first so passport (next line) has access
+//mongo schemas need to be before passport so it has access
+require('./models/User');
 require('./models/Survey');
 require('./services/passport');
 
@@ -25,6 +26,7 @@ app.use(passport.session());
 
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
+require('./routes/surveyRoutes')(app);
 
 //this is production code for serving routes defined in our react app that the express server isnt set up for.
 if (process.env.NODE_ENV === 'production') {
