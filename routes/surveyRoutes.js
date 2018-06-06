@@ -7,7 +7,8 @@ const surveyTemplate = require('../services/emailTemplates/surveyTemplate');
 const Survey = mongoose.model('surveys');
 
 module.exports = app => {
-	app.post('/api/surveys', requireLogin, requireCredits, (req, res) => {
+	//the anonymous function is async so that we can push to mongo after the emails have been sent
+	app.post('/api/surveys', requireLogin, requireCredits, async (req, res) => {
 		const { title, subject, body, recipients } = req.body;
 		//wrap the email (in map function) in parenthesis to return an object so the function wont confuse it as function brackets
 		const survey = new Survey({
@@ -20,6 +21,16 @@ module.exports = app => {
 		});
 		//Send the email
 		const mailer = new Mailer(survey, surveyTemplate(survey));
-		mailer.send();
+
+		try {
+			await mailer.send();
+			await survey.save();
+			req.user.credits -= 1;
+			const user = await req.user.save();
+
+			res.send(user);
+		} catch (err) {
+			res.status(422).send(err);
+		}
 	});
 };
