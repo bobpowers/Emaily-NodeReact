@@ -13,6 +13,7 @@ class Mailer extends helper.Mail {
 
 		//addContent is provided from extending helper.Mail
 		this.addContent(this.body);
+		//these are our own methods
 		this.addClickTracking();
 		this.addRecipients();
 	}
@@ -29,6 +30,16 @@ class Mailer extends helper.Mail {
 
 		trackingSettings.setClickTracking(clickTracking);
 		this.addTrackingSettings(trackingSettings);
+	}
+
+	addRecipients() {
+		const personalize = new helper.Personalization();
+
+		this.recipients.forEach(recipient => {
+			personalize.addTo(recipient);
+		});
+		//addPersonalization is from sendgrid
+		this.addPersonalization(personalize);
 	}
 }
 
