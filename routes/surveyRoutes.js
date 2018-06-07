@@ -7,6 +7,9 @@ const surveyTemplate = require('../services/emailTemplates/surveyTemplate');
 const Survey = mongoose.model('surveys');
 
 module.exports = app => {
+	app.get('/api/surveys/thanks', (req, res) => {
+		res.send('Thank you for your feedback!');
+	});
 	//the anonymous function is async so that we can push to mongo after the emails have been sent
 	app.post('/api/surveys', requireLogin, requireCredits, async (req, res) => {
 		const { title, subject, body, recipients } = req.body;
