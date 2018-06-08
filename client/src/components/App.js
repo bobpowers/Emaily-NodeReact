@@ -18,8 +18,8 @@ class App extends Component {
 
 	render() {
 		return (
-			<div className="container">
-				<BrowserRouter>
+			<BrowserRouter>
+				<div className="container">
 					<div>
 						<Header />
 						{/* using 'exact' as a prop is the same as writing exact={true} */}
@@ -27,8 +27,8 @@ class App extends Component {
 						<Route exact path="/surveys" component={Dashboard} />
 						<Route path="/surveys/new" component={SurveyNew} />
 					</div>
-				</BrowserRouter>
-			</div>
+				</div>
+			</BrowserRouter>
 		);
 	}
 }
