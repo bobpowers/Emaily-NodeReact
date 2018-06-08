@@ -13,5 +13,3 @@ export default emails => {
 
 	return;
 };
-
-// .replace(/(^[,\s]+)|([,\s]+$)/g, '')
