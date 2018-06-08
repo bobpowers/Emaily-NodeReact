@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import SurveyField from './SurveyField';
 import { Link } from 'react-router-dom';
+import validateEmails from '../../utils/validateEmails';
 
 const FIELDS = [
 	{ label: 'Survey Title', name: 'title' },
@@ -49,6 +50,10 @@ class SurveyForm extends Component {
 function validate(values) {
 	const errors = {};
 
+	//This runs every email through regex and returns bad emails to client
+	errors.emails = validateEmails(values.emails || '');
+
+	//This covers the basics of needing values and it will override the invalid emails warning until the user starts including emails
 	FIELDS.forEach(({ name }) => {
 		if (!values[name]) {
 			errors[name] = 'You must provide a value';
