@@ -45,7 +45,7 @@ function validate(values) {
 	const errors = {};
 
 	//This runs every email through regex and returns bad emails to client
-	errors.emails = validateEmails(values.emails || '');
+	errors.recipients = validateEmails(values.recipients || '');
 
 	//This covers the basics of needing values and it will override the invalid emails warning until the user starts including emails
 	formFields.forEach(({ name }) => {
