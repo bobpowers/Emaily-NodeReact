@@ -1,5 +1,6 @@
 // SurveyNew displays SurveyForm and SurveyFormReview
 import React, { Component } from 'react';
+import { reduxForm } from 'redux-form';
 import SurveyForm from './SurveyForm';
 import SurveyFormReview from './SurveyFormReview';
 
@@ -27,4 +28,7 @@ class SurveyNew extends Component {
 	}
 }
 
-export default SurveyNew;
+//these 'settings' override the settings in the SurveyForm component and do not persist data if the cancel button is pressed
+export default reduxForm({
+	form: 'surveyForm'
+})(SurveyNew);

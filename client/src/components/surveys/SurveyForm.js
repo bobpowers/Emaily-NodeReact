@@ -57,6 +57,7 @@ function validate(values) {
 	return errors;
 }
 
+// these 'settings' for reduxForm keep persistent data between the review and the creation page. (Unlike the 'settings' in SurveyNew)
 export default reduxForm({
 	validate,
 	form: 'surveyForm',
