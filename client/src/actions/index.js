@@ -13,6 +13,8 @@ export const handleToken = token => async dispatch => {
 	dispatch({ type: FETCH_USER, payload: res.data });
 };
 
-export const submitSurvey = values => {
-	return { type: 'submit-survey' };
+export const submitSurvey = values => async dispatch => {
+	const res = await axios.post('/api/surveys', values);
+
+	dispatch({ type: FETCH_USER, payload: res.data });
 };
