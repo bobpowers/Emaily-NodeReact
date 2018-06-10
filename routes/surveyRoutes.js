@@ -10,6 +10,11 @@ module.exports = app => {
 	app.get('/api/surveys/thanks', (req, res) => {
 		res.send('Thank you for your feedback!');
 	});
+
+	app.post('/api/surveys/webhooks', (req, res) => {
+		console.log(req.body);
+		res.send({});
+	});
 	//the anonymous function is async so that we can push to mongo after the emails have been sent
 	app.post('/api/surveys', requireLogin, requireCredits, async (req, res) => {
 		const { title, subject, body, recipients } = req.body;
