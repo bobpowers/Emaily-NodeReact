@@ -1,3 +1,6 @@
+const _ = require('lodash');
+const Path = require('path-parser').default;
+const { URL } = require('url');
 const mongoose = require('mongoose');
 const requireLogin = require('../middlewares/requireLogin');
 const requireCredits = require('../middlewares/requireCredits');
@@ -12,7 +15,28 @@ module.exports = app => {
 	});
 
 	app.post('/api/surveys/webhooks', (req, res) => {
-		console.log(req.body);
+		//.chain() starts lodash chain that automatically moves all returned values to the next method down the line and returns all to 'events' with .value()...
+		//.compact() removes all instances of 'undefined' - i.e. all click events that dont fit the parameters we're looking for that were removed and replaced with 'undefined'.
+		//.uniqBy() removes duplicate responses based on email and survey Id. this means the same user can respond to multiple campaigns at the same time but cant send multiple responses to the same campaign.
+
+		const events = _.chain(req.body)
+			.map(({ email, url }) => {
+				//Path will take :surveyId and :choice and return an object with these assigned as the keys within 'p' that holds the values for where the client navigated to (the specific survey id and a yes or no)
+				const p = new Path('/api/surveys/:surveyId/:choice');
+				const match = p.test(new URL(url).pathname);
+				if (match) {
+					return {
+						email,
+						surveyId: match.surveyId,
+						choice: match.choice
+					};
+				}
+			})
+			.compact()
+			.uniqBy('email', 'surveyId')
+			.value();
+		console.log(events);
+
 		res.send({});
 	});
 	//the anonymous function is async so that we can push to mongo after the emails have been sent
