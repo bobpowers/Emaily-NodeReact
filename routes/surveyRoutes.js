@@ -19,7 +19,7 @@ module.exports = app => {
 		//.compact() removes all instances of 'undefined' - i.e. all click events that dont fit the parameters we're looking for that were removed and replaced with 'undefined'.
 		//.uniqBy() removes duplicate responses based on email and survey Id. this means the same user can respond to multiple campaigns at the same time but cant send multiple responses to the same campaign.
 
-		const events = _.chain(req.body)
+		_.chain(req.body)
 			.map(({ email, url }) => {
 				//Path will take :surveyId and :choice and return an object with these assigned as the keys within 'p' that holds the values for where the client navigated to (the specific survey id and a yes or no)
 				const p = new Path('/api/surveys/:surveyId/:choice');
@@ -34,8 +34,22 @@ module.exports = app => {
 			})
 			.compact()
 			.uniqBy('email', 'surveyId')
+			.each(({ surveyId, email, choice }) => {
+				//mongoose allows you to access the id with just 'id' but mongo requires '_id'
+				Survey.updateOne(
+					{
+						_id: surveyId,
+						recipients: {
+							$elemMatch: { email: email, responded: false }
+						}
+					},
+					{
+						$inc: { [choice]: 1 },
+						$set: { 'recipients.$.responded': true }
+					}
+				).exec();
+			})
 			.value();
-		console.log(events);
 
 		res.send({});
 	});
